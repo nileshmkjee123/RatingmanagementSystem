@@ -1,22 +1,22 @@
 package com.rating.ratingmanagementsystem.entity;
 
-import jakarta.validation.constraints.DecimalMax;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document
+import java.math.BigDecimal;
+
+@Document(collection = "ratings")
 @Data
 public class Rating {
-    @Transient
-    public static final String SEQUENCE_NAME = "ratings_sequence";
+//    @Transient
+//    public static final String SEQUENCE_NAME = "ratings_sequence";
     @Id
-    private Long ratingId;
+    private String id;
     @NotEmpty
-    @DecimalMax("5.0")
-    @DecimalMin("0.0")
+    @NotNull
     private double rating;
 }
