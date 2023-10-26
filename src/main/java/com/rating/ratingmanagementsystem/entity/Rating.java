@@ -12,8 +12,7 @@ import java.math.BigDecimal;
 @Document(collection = "ratings")
 @Data
 public class Rating {
-//    @Transient
-//    public static final String SEQUENCE_NAME = "ratings_sequence";
+
     @Id
     private String id;
     @NotEmpty

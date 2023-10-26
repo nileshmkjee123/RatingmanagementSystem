@@ -2,18 +2,16 @@ package com.rating.ratingmanagementsystem.controller;
 
 import com.rating.ratingmanagementsystem.entity.Rating;
 import com.rating.ratingmanagementsystem.service.RatingService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/rating")
+@AllArgsConstructor
 public class RatingsController {
 
     private RatingService ratingService;
-    @Autowired
-    public RatingsController(RatingService ratingService) {
-        this.ratingService = ratingService;
-    }
 
     @PostMapping("/submit")
     public Rating submitRating(@RequestBody Rating rating)
