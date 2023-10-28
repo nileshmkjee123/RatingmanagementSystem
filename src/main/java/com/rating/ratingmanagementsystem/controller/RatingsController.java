@@ -4,6 +4,8 @@ import com.rating.ratingmanagementsystem.entity.Rating;
 import com.rating.ratingmanagementsystem.service.RatingService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -14,38 +16,39 @@ public class RatingsController {
     private RatingService ratingService;
 
     @PostMapping("/submit")
-    public Rating submitRating(@RequestBody Rating rating)
+    public ResponseEntity<?> submitRating(@RequestBody Rating rating)
     {
-        return ratingService.submitRating(rating);
+
+    return new ResponseEntity<>(ratingService.submitRating(rating), HttpStatus.CREATED);
     }
+
 
     @PutMapping("/update/{id}")
-    public Rating updateRating(@PathVariable String id,
+    public ResponseEntity<?> updateRating(@PathVariable String id,
                                @RequestBody Rating rating)
     {
-        return ratingService.updateRating(id,rating);
+        return new ResponseEntity<>(ratingService.updateRating(id,rating),HttpStatus.OK);
     }
-//    @GetMapping("/get/{id}")
-//    public Rating getRating(@PathVariable String id)
-//    {
-//        return ratingService.getRating(id);
-//    }
+
 
     @DeleteMapping("/delete/{id}")
-    public String deleteRating(@PathVariable String id)
+    public ResponseEntity<?> deleteRating(@PathVariable String id)
     {
-        return ratingService.deleteRating(id);
+
+        return new ResponseEntity<>(ratingService.deleteRating(id),HttpStatus.OK);
     }
 
     @GetMapping("/count")
-    public long noOfRatings()
+    public ResponseEntity<?> noOfRatings()
     {
-        return ratingService.countRatings();
+
+        return new ResponseEntity<>(ratingService.countRatings(),HttpStatus.OK);
     }
 
     @GetMapping("/avg")
-    public double averageRating()
+    public ResponseEntity<?> averageRating()
     {
-        return ratingService.avgRatings();
+
+        return new ResponseEntity<>(ratingService.avgRatings(),HttpStatus.OK);
     }
 }

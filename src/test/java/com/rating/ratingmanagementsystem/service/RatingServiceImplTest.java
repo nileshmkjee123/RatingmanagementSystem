@@ -13,6 +13,7 @@ import org.mockito.MockitoAnnotations;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 
@@ -47,21 +48,15 @@ class RatingServiceImplTest {
 
     }
 //
-//    @Test
-//    void testUpdateRating() {
-//        mock(Rating.class);
-//        mock(RatingRepository.class);
-//
-//        Rating rating1 = new Rating(4.0);
-//
-//        //toUpdateRating.setRating(rating.getRating());
-//        //ratingRepository.save(toUpdateRating);
-//        //when(ratingRepository.findById(rating.getId()).get()).thenReturn(rating);
-//        System.out.println(rating1.getId());
-////        assertThat(ratingService.updateRating(rating1.getId(),rating1)).
-////                isEqualTo(rating1);
-//    }
-//
+    @Test
+    void testUpdateRating() {
+        doReturn(Optional.of(rating)).when(ratingRepository).findById(any());
+        doReturn(rating).when(ratingRepository).save(any());
+
+        Rating rating1 = ratingService.updateRating("123", rating);
+        assertEquals(rating.getRating(), rating1.getRating());
+
+    }
     @Test
     void testDeleteRating() {
         mock(Rating.class);

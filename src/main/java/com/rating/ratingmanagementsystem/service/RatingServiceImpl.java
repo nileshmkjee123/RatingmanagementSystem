@@ -5,7 +5,7 @@ import com.rating.ratingmanagementsystem.repo.RatingRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-
+//add exceptions & validations
 @Service
 @AllArgsConstructor
 public class RatingServiceImpl implements RatingService {
