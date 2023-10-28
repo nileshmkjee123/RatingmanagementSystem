@@ -18,4 +18,8 @@ public class Rating {
     @NotEmpty
     @NotNull
     private double rating;
+
+//    public Rating(double rating) {
+//        this.rating = rating;
+//    }
 }
