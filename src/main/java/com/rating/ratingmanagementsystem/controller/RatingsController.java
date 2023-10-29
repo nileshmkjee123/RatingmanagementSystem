@@ -2,8 +2,8 @@ package com.rating.ratingmanagementsystem.controller;
 
 import com.rating.ratingmanagementsystem.entity.Rating;
 import com.rating.ratingmanagementsystem.service.RatingService;
+import com.rating.ratingmanagementsystem.validation.RatingsValidator;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,10 +16,14 @@ public class RatingsController {
     private RatingService ratingService;
 
     @PostMapping("/submit")
-    public ResponseEntity<?> submitRating(@RequestBody Rating rating)
+    public ResponseEntity<?> submitRating(@RequestBody Rating rating)throws RuntimeException
     {
-
-    return new ResponseEntity<>(ratingService.submitRating(rating), HttpStatus.CREATED);
+        RatingsValidator r = new RatingsValidator();
+        if(r.validateForRange(rating.getRating())&& r.validateForValue(rating.getRating()))
+            return new ResponseEntity<>(ratingService.submitRating(rating), HttpStatus.CREATED);
+        if(!r.validateForRange(rating.getRating()))
+            return new ResponseEntity<>("Kindly give a rating between 0 and 5", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("This rating is not acceptable. Please provide rating as a multiple of 0.5", HttpStatus.BAD_REQUEST);
     }
 
 
@@ -27,7 +31,13 @@ public class RatingsController {
     public ResponseEntity<?> updateRating(@PathVariable String id,
                                @RequestBody Rating rating)
     {
-        return new ResponseEntity<>(ratingService.updateRating(id,rating),HttpStatus.OK);
+        RatingsValidator r = new RatingsValidator();
+        if(r.validateForRange(rating.getRating())&& r.validateForValue(rating.getRating()))
+            return new ResponseEntity<>(ratingService.updateRating(id,rating),HttpStatus.OK);
+        if(!r.validateForRange(rating.getRating()))
+            return new ResponseEntity<>("Kindly give a rating between 0 and 5", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("This rating is not acceptable. Please provide rating as a multiple of 0.5", HttpStatus.BAD_REQUEST);
+
     }
 
 

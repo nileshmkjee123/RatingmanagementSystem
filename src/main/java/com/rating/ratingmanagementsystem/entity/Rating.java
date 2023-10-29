@@ -15,7 +15,6 @@ public class Rating {
 
     @Id
     private String id;
-    @NotEmpty
     @NotNull
     private double rating;
 }

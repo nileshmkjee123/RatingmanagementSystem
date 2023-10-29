@@ -1,9 +1,13 @@
 package com.rating.ratingmanagementsystem.service;
 
 import com.rating.ratingmanagementsystem.entity.Rating;
+import com.rating.ratingmanagementsystem.exception.RatingsException;
 import com.rating.ratingmanagementsystem.repo.RatingRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.text.DecimalFormat;
+import java.util.Optional;
 
 //add exceptions & validations
 @Service
@@ -18,40 +22,41 @@ public class RatingServiceImpl implements RatingService {
     }
 
     @Override
-    public Rating updateRating(String id, Rating rating) {
-        Rating toUpdateRating = ratingRepository.findById(id).get();
+    public Rating updateRating(String id, Rating rating)throws RatingsException {
+        Optional<Rating> optionalRating = ratingRepository.findById(id);
+        if(optionalRating.isPresent()){
+       Rating toUpdateRating = optionalRating.get();
         toUpdateRating.setRating(rating.getRating());
         ratingRepository.save(toUpdateRating);
-        return toUpdateRating;
+        return toUpdateRating;}
+        throw new RatingsException("Rating with id: "+id+
+                " not found");
     }
 
-//    @Override
-//    public Rating getRating(String id) {
-//        return ratingRepository.findById(id).get();
-//
-//    }
 
     @Override
     public String deleteRating(String id) {
-        ratingRepository.deleteById(id);
-        return "Rating for "+id+" is removed";
+        Optional<Rating> optionalRating = ratingRepository.findById(id);
+        if(optionalRating.isPresent()){
+            ratingRepository.deleteById(id);
+
+        }
+        throw new RatingsException("Rating with id: "+id+
+                " not found");
+
+
 
     }
 
     @Override
     public long countRatings() {
-
-//        MongoClient mongoClient = MongoClients.create("mongodb://localhost:27017");
-//            MongoDatabase database = mongoClient.getDatabase("ratings");
-//            MongoCollection<Document> collection = database.getCollection("ratings");
-//
-//                return collection.estimatedDocumentCount();
     return ratingRepository.count();
     }
 
     @Override
     public double avgRatings() {
-   return ratingRepository.avg();
+        DecimalFormat decfor = new DecimalFormat("0.0");
+        return Double.valueOf(decfor.format(ratingRepository.avg()));
 
 
     }
