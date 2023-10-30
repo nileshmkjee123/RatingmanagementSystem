@@ -4,6 +4,9 @@ import com.rating.ratingmanagementsystem.entity.Rating;
 import com.rating.ratingmanagementsystem.exception.RatingsException;
 import com.rating.ratingmanagementsystem.repo.RatingRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.text.DecimalFormat;
@@ -54,15 +57,7 @@ public class RatingServiceImpl implements RatingService {
     }
 
     @Override
-    public double avgRatings() {
-        if(countRatings()==0)
-        {
-            return 0.0;
-        }
-
-        DecimalFormat decfor = new DecimalFormat("0.0");
-        return Double.parseDouble(decfor.format(ratingRepository.avg()));
-
-
+    public double avg() {
+        return ratingRepository.avg();
     }
 }

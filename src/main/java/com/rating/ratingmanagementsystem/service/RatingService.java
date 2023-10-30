@@ -2,6 +2,7 @@ package com.rating.ratingmanagementsystem.service;
 
 import com.rating.ratingmanagementsystem.entity.Rating;
 import com.rating.ratingmanagementsystem.exception.RatingsException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
@@ -17,5 +18,5 @@ public interface RatingService {
 
     long countRatings();
 
-    double avgRatings();
+    double avg();
 }

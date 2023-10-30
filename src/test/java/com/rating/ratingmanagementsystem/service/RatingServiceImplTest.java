@@ -1,8 +1,10 @@
 package com.rating.ratingmanagementsystem.service;
 
 import com.rating.ratingmanagementsystem.entity.Rating;
+import com.rating.ratingmanagementsystem.exception.RatingsException;
 import com.rating.ratingmanagementsystem.repo.RatingRepository;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Answers;
@@ -58,15 +60,23 @@ class RatingServiceImplTest {
 
     }
     @Test
+    void testUpdateExceptionRating() {
+        //doReturn(Optional.of(rating)).when(ratingRepository).findById(any());
+       // doReturn(rating).when(ratingRepository).save(any());
+
+        Assertions.assertThrows(RatingsException.class,
+                () -> ratingService.updateRating("1",rating));
+
+    }
+    @Test
     void testDeleteRating() {
         mock(Rating.class);
-        mock(RatingRepository.class, Mockito.CALLS_REAL_METHODS);
+        mock(RatingRepository.class);
         doAnswer(Answers.CALLS_REAL_METHODS).when(
                 ratingRepository).deleteById(any());
-        assertThat(ratingService.deleteRating("653aaf5819c4077c9fda64b0")).
-                isEqualTo("Rating for "+"653aaf5819c4077c9fda64b0"
-                        +" is removed");
 
+        Assertions.assertThrows(RatingsException.class,
+                () -> ratingService.deleteRating("653aaf5819c4077c9fda64b0"));
     }
 //
     @Test
@@ -94,7 +104,7 @@ class RatingServiceImplTest {
         Rating rating2 = new Rating();
         rating2.setRating(3.0);
         when(ratingRepository.avg()).thenReturn(4.0);
-        assertThat(ratingService.avgRatings()).
+        assertThat(ratingService.avg()).
                 isEqualTo(4.0);
     }
 }

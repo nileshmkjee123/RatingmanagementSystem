@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.DecimalFormat;
+
 @RestController
 @RequestMapping("/api/rating")
 @AllArgsConstructor
@@ -57,8 +59,12 @@ public class RatingsController {
 
     @GetMapping("/avg")
     public ResponseEntity<?> averageRating()
+    {  if(ratingService.countRatings()==0)
     {
+        return new ResponseEntity<>(ratingService.countRatings(),HttpStatus.NO_CONTENT);
+    }
+    DecimalFormat decimalFormat = new DecimalFormat("0.0");
 
-        return new ResponseEntity<>(ratingService.avgRatings(),HttpStatus.OK);
+    return new ResponseEntity<>(Double.parseDouble(decimalFormat.format(ratingService.avg())),HttpStatus.OK);
     }
 }
