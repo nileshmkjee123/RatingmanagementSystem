@@ -39,7 +39,7 @@ public class RatingServiceImpl implements RatingService {
         Optional<Rating> optionalRating = ratingRepository.findById(id);
         if(optionalRating.isPresent()){
             ratingRepository.deleteById(id);
-
+            return "Rating with id:"+id+" deleted";
         }
         throw new RatingsException("Rating with id: "+id+
                 " not found");
@@ -55,8 +55,13 @@ public class RatingServiceImpl implements RatingService {
 
     @Override
     public double avgRatings() {
+        if(countRatings()==0)
+        {
+            return 0.0;
+        }
+
         DecimalFormat decfor = new DecimalFormat("0.0");
-        return Double.valueOf(decfor.format(ratingRepository.avg()));
+        return Double.parseDouble(decfor.format(ratingRepository.avg()));
 
 
     }
