@@ -2,6 +2,7 @@ package com.rating.ratingmanagementsystem.service;
 
 import com.rating.ratingmanagementsystem.entity.Rating;
 import com.rating.ratingmanagementsystem.exception.RatingsException;
+import org.springframework.stereotype.Service;
 
 import java.util.Map;
 

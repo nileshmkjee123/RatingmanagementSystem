@@ -1,46 +1,123 @@
 package com.rating.ratingmanagementsystem;
 
+
 import com.rating.ratingmanagementsystem.entity.Rating;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
+import com.rating.ratingmanagementsystem.exception.RatingsException;
+import com.rating.ratingmanagementsystem.repo.RatingRepository;
+import com.rating.ratingmanagementsystem.service.RatingServiceImpl;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.web.client.RestTemplate;
-import org.w3c.dom.stylesheets.LinkStyle;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 
-import java.util.List;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.util.HashMap;
+import java.util.Map;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+import static org.junit.jupiter.api.Assertions.*;
+@DataMongoTest()
+@ExtendWith(SpringExtension.class)
+@Import({RatingServiceImpl.class})
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class RatingManagementSystemApplicationTests {
-@LocalServerPort
-private int port;
-private String baseUrl ="http://localhost";
-private static RestTemplate restTemplate;
 
-@BeforeAll
-public static void init()
-{
-	restTemplate = new RestTemplate();
-}
-@BeforeEach
-public void setUp()
-{
-	baseUrl = baseUrl.concat(":").concat(port+"").concat("/api/rating");
-}
-@Test
-public void testSubmitRating(){
-	Rating rating = new Rating();
-	rating.setRating(2.5);
-	String url = baseUrl.concat("/submit");
-	Rating response = restTemplate.postForObject(url,
-			rating, Rating.class);
-    assert response != null;
-    assertEquals(2.5,response.getRating());
-}
+@Autowired
+    private RatingRepository ratingRepository;
+@Autowired
+    private RatingServiceImpl ratingService;
+	@Test
+	void testIntegrationSubmitRating() {
+		Rating rating = new Rating();
+		rating.setId("1");
+		rating.setRating(1.5);
+		Rating savedRating = ratingService.submitRating(rating);
+		Rating foundRating = ratingRepository.findById("1").get();
+        assertEquals(savedRating.getId(), foundRating.getId());
+		assertEquals(savedRating.getRating(), foundRating.getRating());
+	}
+	@Test
+	void testIntegrationUpdateRating() {
+		Rating rating = new Rating();
+		rating.setId("1");
+		rating.setRating(2.5);
+
+		ratingRepository.save(rating);
+		rating.setRating(5.0);
+		Rating updatedRating = ratingRepository.save(rating);
+		assertEquals(updatedRating.getId(), rating.getId());
+		assertEquals(updatedRating.getRating(), rating.getRating());
+	}
+
+	@Test
+	void testIntegrationAvgRating() {
+		Rating rating = new Rating();
+		rating.setId("1");
+		rating.setRating(2);
 
 
+		ratingRepository.save(rating);
+
+
+		assertEquals(ratingService.avg(),2.0);
+
+	}
+	@Test
+	void testIntegrationCountByRating() {
+		Rating rating = new Rating();
+		rating.setId("1");
+		rating.setRating(0.0);
+		Rating rating2 = new Rating();
+		rating.setId("2");
+		rating.setRating(0.0);
+		Rating rating3 = new Rating();
+		rating.setId("3");
+		rating.setRating(3);
+		ratingRepository.save(rating);
+		ratingRepository.save(rating2);
+		ratingRepository.save(rating3);
+		Map<Double,Integer> m = new HashMap<>();
+		m.put(0.0,2);
+		m.put(3.0,1);
+		assertEquals(ratingService.countByRating(),m);
+
+	}
+
+	@Test
+	void testIntegrationDeleteRating() {
+		Rating rating = new Rating();
+		rating.setId("1");
+		rating.setRating(0.0);
+
+		ratingRepository.save(rating);
+
+		assertEquals(ratingService.deleteRating("1"),"Rating with id:1 deleted");
+
+	}
+
+	@Test
+	void testIntegrationDeleteExceptionRating() {
+		Rating rating = new Rating();
+		rating.setId("1");
+		rating.setRating(0.0);
+
+		ratingRepository.save(rating);
+
+		assertThrows(RatingsException.class,() -> ratingService.deleteRating("2"));
+
+	}
+
+	@Test
+	void testIntegrationUpdateExceptionRating() {
+		Rating rating = new Rating();
+		rating.setId("1");
+		rating.setRating(0.0);
+
+		ratingRepository.save(rating);
+
+		assertThrows(RatingsException.class,() -> ratingService.updateRating("2",rating));
+
+	}
 }
