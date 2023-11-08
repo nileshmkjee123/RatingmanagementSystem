@@ -50,12 +50,12 @@ public class RatingsController {
         return new ResponseEntity<>(ratingService.deleteRating(id),HttpStatus.OK);
     }
 
-    @GetMapping("/count")
-    public ResponseEntity<?> noOfRatings()
-    {
-
-        return new ResponseEntity<>(ratingService.countRatings(),HttpStatus.OK);
-    }
+//    @GetMapping("/count")
+//    public ResponseEntity<?> noOfRatings()
+//    {
+//
+//        return new ResponseEntity<>(ratingService.countRatings(),HttpStatus.OK);
+//    }
 
     @GetMapping("/avg")
     public ResponseEntity<?> averageRating()
@@ -66,5 +66,12 @@ public class RatingsController {
     DecimalFormat decimalFormat = new DecimalFormat("0.0");
 
     return new ResponseEntity<>(Double.parseDouble(decimalFormat.format(ratingService.avg())),HttpStatus.OK);
+    }
+
+    @GetMapping("/counter")
+    public ResponseEntity<?> noOfRatingsByRating()
+    {
+
+        return new ResponseEntity<>(ratingService.countByRating(),HttpStatus.OK);
     }
 }

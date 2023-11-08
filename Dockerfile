@@ -1,5 +1,4 @@
-FROM openjdk:17-alpine
-VOLUME /tmp
-EXPOSE 8080
-ADD target/RatingManagementSystem-0.0.1-SNAPSHOT.jar RatingManagementSystem.jar
-ENTRYPOINT ["java","-jar","/RatingManagementSystem.jar"]
+FROM openjdk:17
+
+COPY target/RatingManagementSystem-0.0.1-SNAPSHOT.jar rating.jar
+ENTRYPOINT ["java", "-jar","/rating.jar"]

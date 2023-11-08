@@ -1,37 +1,15 @@
-openapi: 3.0.3
-
+openapi: 3.0.1
 info:
   title: OpenAPI Specification for Rating Management Service
   version: '1.0'
-  
-externalDocs:
-    description: More Information about Rating Management Service API
-    url: https://github.com/nileshmkjee123/RatingmanagementSystem/tree/main
-    
 servers:
-  - url: http://localhost:8080/api/rating
-      
-tags:
-  - name: Requests
-    description: Description for requests
-        
+  - url: http://localhost:8080
 paths:
-  /submit:
-    summary: Submit a rating
-    post:
-      tags:
-        - Requests
-      summary: Endpoint to submit a rating.
-      responses:
-        201:
-          description: Created
-        400:
-          description: Bad request
-  /update/{id}:
-    summary: Update a rating
+  /api/rating/update/{id}:
     put:
       tags:
-        - Requests
+        - Rating Management Service API's
+      operationId: updateRating
       parameters:
         - name: id
           in: path
@@ -44,45 +22,73 @@ paths:
             schema:
               $ref: '#/components/schemas/Rating'
         required: true
-      summary: Endpoint to update a rating.
       responses:
-        200:
-          description: Updated
-        400:
-          description: Bad request
-  /delete/{id}:
-    summary: Delete a rating
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/rating/submit:
+    post:
+      tags:
+        - Rating Management Service API's
+      operationId: submitRating
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Rating'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/rating/counter:
+    get:
+      tags:
+        - Rating Management Service API's
+      operationId: noOfRatingsByRating
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/rating/avg:
+    get:
+      tags:
+        - Rating Management Service API's
+      operationId: averageRating
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/rating/delete/{id}:
     delete:
       tags:
-        - Requests
+        - Rating Management Service API's
+      operationId: deleteRating
       parameters:
         - name: id
           in: path
           required: true
           schema:
             type: string
-      summary: Endpoint to delete a rating.
       responses:
-        200:
-          description: Deleted
-  /count:
-    summary: count number of ratings.
-    get:
-      tags:
-        - Requests
-      summary: Endpoint to count the number of ratings.
-      responses:
-        200:
-          description: count
-  /avg:
-    summary: find average of all ratings.
-    get:
-      tags:
-        - Requests
-      summary: Endpoint to find average of all the ratings.
-      responses:
-        200:
-          description: average
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
 components:
   schemas:
     Rating:
@@ -90,11 +96,6 @@ components:
         - rating
       type: object
       properties:
-        id:
-          type: string
         rating:
           type: number
           format: double
-  
-  
-  

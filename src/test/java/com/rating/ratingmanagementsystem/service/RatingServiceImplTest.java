@@ -9,10 +9,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Answers;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import java.util.Optional;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -61,15 +60,14 @@ class RatingServiceImplTest {
     }
     @Test
     void testUpdateExceptionRating() {
-        //doReturn(Optional.of(rating)).when(ratingRepository).findById(any());
-       // doReturn(rating).when(ratingRepository).save(any());
 
         Assertions.assertThrows(RatingsException.class,
                 () -> ratingService.updateRating("1",rating));
 
     }
+
     @Test
-    void testDeleteRating() {
+    void testDeleteExceptionRating() {
         mock(Rating.class);
         mock(RatingRepository.class);
         doAnswer(Answers.CALLS_REAL_METHODS).when(
@@ -88,7 +86,7 @@ class RatingServiceImplTest {
         Rating rating1 = new Rating();
         rating1.setRating(4.0);
         Rating rating2 = new Rating();
-        rating2.setRating(1.0);
+        rating2.setRating(4.0);
         when(ratingRepository.count()).thenReturn(3L);
         assertThat(ratingService.countRatings()).
                 isEqualTo(3L);
@@ -106,5 +104,27 @@ class RatingServiceImplTest {
         when(ratingRepository.avg()).thenReturn(4.0);
         assertThat(ratingService.avg()).
                 isEqualTo(4.0);
+    }
+
+    @Test
+    void countByRating() {
+        mock(Rating.class);
+        mock(RatingRepository.class);
+
+        Rating rating1 = new Rating();
+        rating1.setRating(4.0);
+        Rating rating2 = new Rating();
+        rating2.setRating(4.0);
+        ratingRepository.save(rating1);
+        ratingRepository.save(rating2);
+        Map<Double,Integer> m = new HashMap<>();
+        m.put(4.0,2);
+        //m.put(3.0,1);
+        List<Rating> ratingList = new ArrayList<>();
+        ratingList.add(rating1);
+        ratingList.add(rating2);
+        when(ratingRepository.findAll()).thenReturn(ratingList);
+        assertThat(ratingService.countByRating()).
+                isEqualTo(m);
     }
 }

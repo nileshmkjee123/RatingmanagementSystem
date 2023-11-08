@@ -4,13 +4,12 @@ import com.rating.ratingmanagementsystem.entity.Rating;
 import com.rating.ratingmanagementsystem.exception.RatingsException;
 import com.rating.ratingmanagementsystem.repo.RatingRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.text.DecimalFormat;
-import java.util.Optional;
+import java.math.BigDecimal;
+import java.util.*;
+
+import static java.util.stream.Collectors.toMap;
 
 //add exceptions & validations
 @Service
@@ -59,5 +58,26 @@ public class RatingServiceImpl implements RatingService {
     @Override
     public double avg() {
         return ratingRepository.avg();
+    }
+
+    @Override
+    public Map<Double,Integer> countByRating() {
+
+        List<Rating> ratingList =ratingRepository.findAll();
+        Map<Double,Integer> map = new HashMap<>();
+        StringBuilder s = new StringBuilder();
+        for(Rating rating:ratingList)
+        {  if(map.containsKey(rating.getRating()))
+                map.put(rating.getRating(),map.get(rating.getRating())+1);
+            else
+                map.put(rating.getRating(),1);}
+
+        return map.entrySet()
+                .stream()
+                .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
+                .collect(
+                        toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2,
+                                LinkedHashMap::new));
+
     }
 }
